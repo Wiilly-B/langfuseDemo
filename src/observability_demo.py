@@ -3,7 +3,6 @@ from langfuse.openai import openai
 from langfuse import observe, get_client
 import dotenv
 from pathlib import Path
-import uuid
 
 dotenv.load_dotenv()
 langfuse = Langfuse(environment="testing")
@@ -45,7 +44,6 @@ def answer_question(question, session_id="demo_session", user_id="guest", tags=[
 if __name__ == "__main__":
     session = "Ufc Questions"
     user_id = "Dana White"
-    
     answer_question("What percentage of UFC fights take place at distance?", 
                     session, user_id, ['UFC', 'Competition Analysis'])
     answer_question("What are the most common training injuries?", 
