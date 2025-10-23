@@ -65,9 +65,8 @@ def load_docs():
 
     return docs
 
-@observe(as_type="generation")
-def answer_question(question, trace_name = "default", session_id="default", user_id="guest", tags=[]):
-    
+@observe(name="answer_generation", as_type="generation")
+def answer_question(question):
     DOCS = load_docs()
     context = "\n\n".join(DOCS.values())
     
@@ -82,6 +81,19 @@ def answer_question(question, trace_name = "default", session_id="default", user
     return response.choices[0].message.content
 
 
+@observe(name="process_question")
+def process_question(question, session_id, user_id):
+    trace_name, tags = extract_trace_and_tags(question)
+    
+    langfuse.update_current_trace(
+        name=trace_name,
+        session_id=session_id,
+        user_id=user_id,
+        tags=tags
+    )
+    
+    return answer_question(question)
+
 if __name__ == "__main__":
     user_id = input("Enter your user ID: ").strip() or "guest"
     session_id = f"{user_id}-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
@@ -92,14 +104,5 @@ if __name__ == "__main__":
         if not question:
             break
 
-        trace_name, tags = extract_trace_and_tags(question)
-
-        langfuse.update_current_trace(
-            name=trace_name,
-            session_id=session_id,
-            user_id=user_id,
-            tags=tags
-        )
-        answer = answer_question(question, trace_name, session_id, user_id, tags)
+        answer = process_question(question, session_id, user_id)
         print(f"\n Answer: {answer}\n")
-        
