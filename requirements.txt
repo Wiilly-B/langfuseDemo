@@ -1,3 +1,4 @@
 langfuse
 openai
 python-dotenv
+pathlib

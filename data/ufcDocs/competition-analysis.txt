@@ -1,0 +1,28 @@
+UFC COMPETITION ANALYSIS (2017-2019)
+
+FIGHT DURATION AND CHARACTERISTICS
+Average fight duration across all weight classes continues to rise as more fights go to decision. This can potentially be attributed to better defensive techniques, fighters being better physically prepared and greater parity in matchmaking. Larger weight classes tend to have shorter fight durations. Women's UFC bouts typically last longer than men's bouts.
+
+POSITION DISTRIBUTION
+The largest percentage of UFC fights (61%, 60% and 62% respectively for 2017, 2018 and 2019) take place at distance (i.e., when fighters are standing at range and not touching). 15% in clinch position, 10% in guard, 9% in half guard, 6% in back control, 3-5% in mount and side control.
+
+STRIKING STATISTICS
+Head is by far the most commonly targeted area (77.98%), followed by body (13.07%) and legs (8.95%). This is due in part to KOs and TKOs to the head being the most common non-decision method of win in all but two weight classes.
+
+STRIKING SUCCESS RATES
+Winning fighters not only attempted more strikes, but they also connected at a higher percentage resulting in higher accuracy scores. Winners have striking success rates between 46-54% while losers range from 35-44%. This represents a 16-32% higher percentage success rate for winners.
+
+FINISH METHODS BY WEIGHT CLASS
+Most common finish method is punches across all weight classes (33-58% of finishes). Rear-naked choke (RNC) is the second most common finish method (8-34% depending on weight class). Other common finishes include guillotine chokes, kicks, elbows, and arm bars.
+
+SUBMISSION POSITIONS
+Back control is the most common position to be submitted from (44.6% of all submissions). Ground miscellaneous positions account for 21.5%, half guard 3.7%, mount 5.0%, bottom guard 7.4%, standing 2.9%, and after drop to ground 5.4%.
+
+OCTAGON SIZE IMPACT
+25-foot Octagon statistics: 37% KO/TKO rate, 25% submission rate, 39% decision rate. Significant strikes attempted: 9.09/min, landed: 4.57/min.
+30-foot Octagon statistics: 32% KO/TKO rate, 17% submission rate, 51% decision rate. Significant strikes attempted: 8.56/min, landed: 3.73/min.
+
+The smaller 25-foot Octagon promotes higher engagement, faster pace, and increased finish rates. Fighters should prepare for higher volume and intensity when scheduled for fights in the 25-foot Octagon.
+
+KEY TAKEAWAY
+Winning fighters attempt more techniques AND have higher success rates. It's not just volume, but accuracy and efficiency that determines success in the Octagon.
