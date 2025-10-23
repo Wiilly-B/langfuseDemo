@@ -1,12 +1,14 @@
+from langfuse import Langfuse
 from langfuse.openai import openai
 import dotenv
 from pathlib import Path
 
 dotenv.load_dotenv()
+langfuse = Langfuse(environment="production")
 
 def load_docs():
     docs = {}
-    docs_dir = Path("ufcDocs")
+    docs_dir = Path("data/ufcDocs")
 
     for file_path in docs_dir.glob("*.txt"):
         with open(file_path, 'r') as f:
@@ -14,9 +16,9 @@ def load_docs():
 
     return docs
 
-DOCS = load_docs()
 
 def answer_question(question, session_id="demo_session", user_id="guest"):
+    DOCS = load_docs()
     context = "\n\n".join(DOCS.values())
     
     response = openai.chat.completions.create(
@@ -34,10 +36,12 @@ def answer_question(question, session_id="demo_session", user_id="guest"):
 
     return response.choices[0].message.content
 
+
 if __name__ == "__main__":
-    session = "Ufc Questions"
-    user_id = "William"
+    session = "Ufc Questions no shipping"
+    user_id = "Dana White"
 
     answer_question("What percentage of UFC fights take place at distance?", session, user_id)
-    answer_question("What does your pricing plan look like?", session, user_id)
-    answer_question("How is the shipping?", session, user_id)
+    answer_question("What are the most common training injuries?", session, user_id)
+    answer_question("What is the UFC PI training methodology?", session, user_id)
+    
