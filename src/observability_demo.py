@@ -1,11 +1,29 @@
 from langfuse import Langfuse
 from langfuse.openai import openai
-from langfuse import observe, get_client
+from langfuse import observe
 import dotenv
 from pathlib import Path
+import json
+from datetime import datetime
 
 dotenv.load_dotenv()
 langfuse = Langfuse(environment="testing")
+
+@observe()
+def extract_session_and_tags(question):
+    response = openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": """Extract a concise session name (1-2 words) and 1-2 relevant tags from the question.
+            Return as JSON: {"session": "SessionName", "tags": ["Tag1", "Tag2"]}
+            Session should be the main topic. Tags should be specific aspects."""},
+            {"role": "user", "content": question}
+        ],
+        response_format={"type": "json_object"}
+    )
+
+    result = json.loads(response.choices[0].message.content)
+    return result.get("session", "General"), result.get("tags", ["General"])
 
 @observe()
 def load_docs():
@@ -19,13 +37,16 @@ def load_docs():
     return docs
 
 @observe()
-def answer_question(question, session_id="demo_session", user_id="guest", tags=[]):
+def answer_question(question, session_id="default", user_id="guest"):
+    trace_name, tags = extract_session_and_tags(question)
+
     langfuse.update_current_trace(
-        name="UFC Q&A",
+        name=trace_name,
         session_id=session_id,
         user_id=user_id,
         tags=tags
     )
+    
     DOCS = load_docs()
     context = "\n\n".join(DOCS.values())
     
@@ -42,11 +63,14 @@ def answer_question(question, session_id="demo_session", user_id="guest", tags=[
 
 
 if __name__ == "__main__":
-    session = "Ufc Questions"
-    user_id = "Dana White"
-    answer_question("What percentage of UFC fights take place at distance?", 
-                    session, user_id, ['UFC', 'Competition Analysis'])
-    answer_question("What are the most common training injuries?", 
-                    session, user_id, ["UFC", "Injury"])
-    answer_question("What is the UFC PI training methodology?", 
-                    session, user_id, ["UFC", "Training Methodology"])
+    user_id = input("Enter your user ID: ").strip() or "guest"
+    session_id = f"{user_id}-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
+    print(f"\n Welcome {user_id}!")
+
+    while True:
+        question = input("Your question: ").strip()
+        if not question:
+            break
+
+        answer = answer_question(question, session_id, user_id)
+        print(f"\n Answer: {answer}\n")
