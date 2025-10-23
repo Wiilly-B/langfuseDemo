@@ -9,8 +9,8 @@ from datetime import datetime
 dotenv.load_dotenv()
 langfuse = Langfuse(environment="testing")
 
-@observe()
-def extract_session_and_tags(question):
+@observe(name="generate_traceName_and_tags", as_type="generation")
+def extract_trace_and_tags(question):
     VALID_TAGS = [
         "fighters",
         "statistics",
@@ -54,7 +54,7 @@ def extract_session_and_tags(question):
     
     return result.get("session", "General"), validated_tags
 
-@observe()
+@observe(name="load_docs")
 def load_docs():
     docs = {}
     docs_dir = Path("data/ufcDocs")
@@ -65,9 +65,9 @@ def load_docs():
 
     return docs
 
-@observe()
+@observe(as_type="generation")
 def answer_question(question, session_id="default", user_id="guest"):
-    trace_name, tags = extract_session_and_tags(question)
+    trace_name, tags = extract_trace_and_tags(question)
 
     langfuse.update_current_trace(
         name=trace_name,
