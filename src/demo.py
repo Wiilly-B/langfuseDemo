@@ -1,11 +1,14 @@
 from langfuse import Langfuse
 from langfuse.openai import openai
+from langfuse import observe, get_client
 import dotenv
 from pathlib import Path
+import uuid
 
 dotenv.load_dotenv()
-langfuse = Langfuse(environment="production")
+langfuse = Langfuse(environment="testing")
 
+@observe()
 def load_docs():
     docs = {}
     docs_dir = Path("data/ufcDocs")
@@ -16,8 +19,14 @@ def load_docs():
 
     return docs
 
-
-def answer_question(question, session_id="demo_session", user_id="guest"):
+@observe()
+def answer_question(question, session_id="demo_session", user_id="guest", tags=[]):
+    langfuse.update_current_trace(
+        name="UFC Q&A",
+        session_id=session_id,
+        user_id=user_id,
+        tags=tags
+    )
     DOCS = load_docs()
     context = "\n\n".join(DOCS.values())
     
@@ -27,21 +36,19 @@ def answer_question(question, session_id="demo_session", user_id="guest"):
         messages=[
             {"role": "system", "content": "Answer based on context. Be brief."},
             {"role": "user", "content": f"Context: {context}\n\nQuestion: {question}"}
-        ],
-        metadata={
-            "langfuse_session_id": session_id,
-            "langfuse_user_id": user_id,
-        }
+        ]
     )
 
     return response.choices[0].message.content
 
 
 if __name__ == "__main__":
-    session = "Ufc Questions no shipping"
+    session = "Ufc Questions"
     user_id = "Dana White"
-
-    answer_question("What percentage of UFC fights take place at distance?", session, user_id)
-    answer_question("What are the most common training injuries?", session, user_id)
-    answer_question("What is the UFC PI training methodology?", session, user_id)
     
+    answer_question("What percentage of UFC fights take place at distance?", 
+                    session, user_id, ['UFC', 'Competition Analysis'])
+    answer_question("What are the most common training injuries?", 
+                    session, user_id, ["UFC", "Injury"])
+    answer_question("What is the UFC PI training methodology?", 
+                    session, user_id, ["UFC", "Training Methodology"])
