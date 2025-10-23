@@ -11,19 +11,48 @@ langfuse = Langfuse(environment="testing")
 
 @observe()
 def extract_session_and_tags(question):
+    VALID_TAGS = [
+        "fighters",
+        "statistics",
+        "rankings",
+        "events",
+        "history",
+        "rules",
+        "predictions",
+        "records",
+        "techniques",
+        "general",
+        "opinion",
+        "weightclass",
+        "training methodology",
+        "injury",
+        "competition analysis"
+    ]
+    
     response = openai.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": """Extract a concise session name (1-2 words) and 1-2 relevant tags from the question.
-            Return as JSON: {"session": "SessionName", "tags": ["Tag1", "Tag2"]}
-            Session should be the main topic. Tags should be specific aspects."""},
+            {"role": "system", "content": f"""Extract a concise session name (1-2 words) and 1-2 relevant tags from the question.
+            
+            You MUST select tags ONLY from this list: {', '.join(VALID_TAGS)}
+            
+            Return as JSON: {{"session": "SessionName", "tags": ["Tag1", "Tag2"]}}
+            
+            Session should be the main topic. Tags must be from the valid list above."""},
             {"role": "user", "content": question}
         ],
         response_format={"type": "json_object"}
     )
 
     result = json.loads(response.choices[0].message.content)
-    return result.get("session", "General"), result.get("tags", ["General"])
+    
+    tags = result.get("tags", ["general"])
+    validated_tags = [tag for tag in tags if tag.lower() in [t.lower() for t in VALID_TAGS]]
+    
+    if not validated_tags:
+        validated_tags = ["general"]
+    
+    return result.get("session", "General"), validated_tags
 
 @observe()
 def load_docs():
@@ -51,7 +80,6 @@ def answer_question(question, session_id="default", user_id="guest"):
     context = "\n\n".join(DOCS.values())
     
     response = openai.chat.completions.create(
-        name="UFC Bot",
         model="gpt-5",
         messages=[
             {"role": "system", "content": "Answer based on context. Be brief."},
