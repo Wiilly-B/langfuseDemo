@@ -1,0 +1,52 @@
+UFC INJURY CHARACTERISTICS (2017-2020)
+
+INJURY OVERVIEW
+Data from 1,344 different injuries recorded in UFC fighters between 2017 and 2020. Musculoskeletal injuries occur when stress applied to bones, muscles, tendons, joints, ligaments and cartilage exceeds the capacity of normal tissue function.
+
+FIGHT VS NON-FIGHT INJURIES
+80.7% of injuries occur during fights, 19.3% occur during training (non-fight). The number of non-fight injuries may be underrepresented as athletes don't always report all training injuries.
+
+MOST COMMON INJURY LOCATIONS - FIGHT
+1. Head (32.5%)
+2. Wrist/Hand (15.2%)
+3. Knee (13.2%)
+4. Foot (9.0%)
+5. Shoulder (7.9%)
+6. Elbow (5.0%)
+7. Lower leg (3.4%)
+8. Ankle (3.3%)
+9. Neck (2.4%)
+10. Chest (2.0%)
+
+MOST COMMON INJURY LOCATIONS - NON-FIGHT/TRAINING
+1. Knee (22.6%)
+2. Shoulder (16.5%)
+3. Neck (10.7%)
+4. Wrist/Hand (10.7%)
+5. Ankle (6.9%)
+6. Lumbar Spine (6.9%)
+7. Elbow (4.6%)
+8. Hip/Groin (4.6%)
+
+MECHANISMS OF INJURY
+Grappling is the highest mechanism of injury during training. Grappling injuries primarily affect: neck pain (16.1%), shoulder pain (14.9%), lumbar pain (11.5%), bruised ribs/chest wall (10.3%), and ankle sprains (8.0%).
+
+Striking-related injuries include: knee pain (16.9%), wrist/hand pain (15.2%), concussion (15.0%), foot pain (14.2%), nasal fracture (10.1%), shoulder pain (7.6%).
+
+Submission-related injuries: LCL strain/rupture (13.3%), elbow pain (11.1%), various knee ligament injuries (MCL, ACL).
+
+INJURY DURATION
+Average rehabilitation time for most frequent injuries: 39 days for men, 33 days for women.
+
+Most frequent injuries and average time out:
+- Nasal fracture: 57 days (men), 31 days (women)
+- Wrist/hand pain: 44 days (men), 38 days (women)
+- Concussion: 42 days (men), 43 days (women)
+- Foot pain: 36 days (men), 25 days (women)
+- Knee pain: 18 days (men)
+
+CONCUSSION ASSESSMENT
+Standard assessments include: symptom severity score (general population ~2, UFC men 12.23, women 15.40), SAC score for cognitive processing, BESS balance testing, trails making test for motor and cognitive function, and reaction time/visual acuity measurements.
+
+INJURY PREVENTION
+Grappling has the highest percentage of reported injury in training. Prevention strategies include: prioritizing communication between training partners and completing higher intensity grappling techniques earlier in training sessions to reduce fatigue-related injuries.
