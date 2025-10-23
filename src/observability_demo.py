@@ -66,15 +66,7 @@ def load_docs():
     return docs
 
 @observe(as_type="generation")
-def answer_question(question, session_id="default", user_id="guest"):
-    trace_name, tags = extract_trace_and_tags(question)
-
-    langfuse.update_current_trace(
-        name=trace_name,
-        session_id=session_id,
-        user_id=user_id,
-        tags=tags
-    )
+def answer_question(question, trace_name = "default", session_id="default", user_id="guest", tags=[]):
     
     DOCS = load_docs()
     context = "\n\n".join(DOCS.values())
@@ -100,5 +92,14 @@ if __name__ == "__main__":
         if not question:
             break
 
-        answer = answer_question(question, session_id, user_id)
+        trace_name, tags = extract_trace_and_tags(question)
+
+        langfuse.update_current_trace(
+            name=trace_name,
+            session_id=session_id,
+            user_id=user_id,
+            tags=tags
+        )
+        answer = answer_question(question, trace_name, session_id, user_id, tags)
         print(f"\n Answer: {answer}\n")
+        
