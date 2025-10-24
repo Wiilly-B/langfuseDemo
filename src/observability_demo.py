@@ -1,4 +1,3 @@
-from langfuse import Langfuse
 from langfuse.openai import openai
 from langfuse import observe, get_client
 import dotenv
@@ -32,14 +31,16 @@ def setup_prompts():
         name="generate_traceName_and_tags",
         type="chat",
         prompt=[
-            {"role": "system", "content": f"""Extract a concise session name (1-2 words) and 1-2 relevant tags from the question.
+            {"role": "system", 
+             "content": f"""Extract a concise session name (1-2 words) and 1-2 relevant tags from the question.
             
             You MUST select tags ONLY from this list: {', '.join(VALID_TAGS)}
             
             Return as JSON: {{"session": "SessionName", "tags": ["Tag1", "Tag2"]}}
             
             Session should be the main topic. Tags must be from the valid list above."""},
-            {"role": "user", "content": "{{user_question}}"}
+            {"role": "user", 
+             "content": "{{user_question}}"}
         ],
         labels=["testing"],
         config={
@@ -53,8 +54,10 @@ def setup_prompts():
         name="answer_question",
         type="chat",
         prompt=[
-            {"role": "system", "content": "Answer based on context. Be brief."},
-            {"role": "user", "content": "Context: {{user_context}}\n\nQuestion: {{user_question}}"}
+            {"role": "system", 
+             "content": "Answer based on context. Be brief."},
+            {"role": "user", 
+             "content": "Context: {{user_context}}\n\nQuestion: {{user_question}}"}
         ],
         labels=["testing"],
         config={
@@ -91,7 +94,7 @@ def process_question(question, session_id, user_id):
 
 @observe(name="generate_traceName_and_tags", as_type="generation")
 def extract_trace_and_tags(question):
-    prompt = langfuse.get_prompt(name="generate_traceName_and_tags", type="chat", label="testing")
+    prompt = langfuse.get_prompt(name="generate_traceName_and_tags", type="chat", label="testing", cache_ttl_seconds=300)
     compiled_chat_prompt = prompt.compile(user_question=question)
 
     response = openai.chat.completions.create(
@@ -118,7 +121,7 @@ def answer_question(question):
     DOCS = load_docs()
     context = "\n\n".join(DOCS.values())
 
-    prompt = langfuse.get_prompt(name="answer_question", type="chat", label="testing")
+    prompt = langfuse.get_prompt(name="answer_question", type="chat", label="testing", cache_ttl_seconds=300)
     compiled_chat_prompt = prompt.compile(user_context=context, user_question=question)
     
     response = openai.chat.completions.create(
