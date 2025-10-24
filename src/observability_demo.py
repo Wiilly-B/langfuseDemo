@@ -9,20 +9,11 @@ dotenv.load_dotenv()
 langfuse = get_client()
 
 VALID_TAGS = [
-        "fighters",
-        "statistics",
-        "rankings",
-        "events",
-        "history",
-        "rules",
-        "predictions",
-        "records",
-        "techniques",
-        "general",
-        "opinion",
-        "weightclass",
-        "training methodology",
-        "injury",
+        "fighters", "statistics", "rankings",
+        "events", "history", "rules",
+        "predictions", "records", "techniques",
+        "general", "opinion", "weightclass",
+        "training methodology", "injury",
         "competition analysis"
     ]
 
@@ -55,9 +46,10 @@ def setup_prompts():
         type="chat",
         prompt=[
             {"role": "system", 
-             "content": "Answer based on context. Be brief."},
-            {"role": "user", 
-             "content": "Context: {{user_context}}\n\nQuestion: {{user_question}}"}
+             "content": "You are a UFC expert assistant. Answer questions based on the provided context. "
+             "Be accurate and concise. CONTEXT {{user_context}}"},
+            {"role": "user", "content": "{{user_question}}"
+            }
         ],
         labels=["testing"],
         config={
@@ -94,7 +86,8 @@ def process_question(question, session_id, user_id, conversation_history):
 
 @observe(name="generate_traceName_and_tags", as_type="generation")
 def extract_trace_and_tags(question):
-    prompt = langfuse.get_prompt(name="generate_traceName_and_tags", type="chat", label="testing", cache_ttl_seconds=300)
+    prompt = langfuse.get_prompt(
+        name="generate_traceName_and_tags", type="chat", label="testing", cache_ttl_seconds=300)
     compiled_chat_prompt = prompt.compile(user_question=question)
 
     response = openai.chat.completions.create(
@@ -122,12 +115,13 @@ def answer_question(question, conversation_history):
     context = "\n\n".join(DOCS.values())
 
     # Increasing cache_ttl_seconds meaning 1 api call every 300 seconds therefore improves performance
-    prompt = langfuse.get_prompt(name="answer_question", type="chat", label="testing", cache_ttl_seconds=300)
+    prompt = langfuse.get_prompt(
+        name="answer_question", type="chat", label="testing", cache_ttl_seconds=300)
     compiled_chat_prompt = prompt.compile(user_context=context, user_question=question)
     
     messages = [compiled_chat_prompt[0]] # System message with context
     messages.extend(conversation_history) # Prev Q&A pairs
-    messages.append({"role": "user", "content": question}) # Current Question
+    messages.append({"role": "user", "content": question})  # Current Question
     
 
     response = openai.chat.completions.create(
