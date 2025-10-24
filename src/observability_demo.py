@@ -79,7 +79,7 @@ def load_docs():
 
 
 @observe(name="process_question")
-def process_question(question, session_id, user_id):
+def process_question(question, session_id, user_id, conversation_history):
     trace_name, tags = extract_trace_and_tags(question)
     
     langfuse.update_current_trace(
@@ -89,7 +89,7 @@ def process_question(question, session_id, user_id):
         tags=tags
     )
     
-    return answer_question(question)
+    return answer_question(question, conversation_history)
 
 
 @observe(name="generate_traceName_and_tags", as_type="generation")
@@ -117,15 +117,21 @@ def extract_trace_and_tags(question):
 
 
 @observe(name="answer_generation", as_type="generation")
-def answer_question(question):
+def answer_question(question, conversation_history):
     DOCS = load_docs()
     context = "\n\n".join(DOCS.values())
 
+    # Increasing cache_ttl_seconds meaning 1 api call every 300 seconds therefore improves performance
     prompt = langfuse.get_prompt(name="answer_question", type="chat", label="testing", cache_ttl_seconds=300)
     compiled_chat_prompt = prompt.compile(user_context=context, user_question=question)
     
+    messages = [compiled_chat_prompt[0]] # System message with context
+    messages.extend(conversation_history) # Prev Q&A pairs
+    messages.append({"role": "user", "content": question}) # Current Question
+    
+
     response = openai.chat.completions.create(
-        messages=compiled_chat_prompt,
+        messages=messages,
         model=prompt.config["model"],
         temperature=prompt.config["temperature"],
         langfuse_prompt=prompt,
@@ -145,13 +151,19 @@ if __name__ == "__main__":
         session_id = f"{user_id}-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
         print(f"\n Welcome {user_id}!")
 
+        conversation_history = []
+
         while True:
             question = input("Your question: ").strip() or "default question"
 
             if question.lower() in {"quit", "exit"}:
                 break
 
-            answer = process_question(question, session_id, user_id)
+            answer = process_question(question, session_id, user_id, conversation_history)
+
+            # Update conversation history
+            conversation_history.append({"role": "user", "content": question})
+            conversation_history.append({"role": "assistant", "content": answer})
             print(f"\n Answer: {answer}\n")
         
-    langfuse.shutdown()
+    langfuse.flush() # Sends pending traces & waits for async ops to complete
