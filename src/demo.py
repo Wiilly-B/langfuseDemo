@@ -73,18 +73,16 @@ def load_docs():
 @observe(name="process_question")
 def process_question(question, session_id, user_id, conversation_history):
     trace_name, tags = extract_trace_and_tags(question)
-    
     langfuse.update_current_trace(
         name=trace_name,
         session_id=session_id,
         user_id=user_id,
         tags=tags
     )
-    
-    return answer_question(question, conversation_history)
+    answer = answer_question(question, conversation_history)
+    return answer
 
 
-@observe(name="generate_traceName_and_tags", as_type="generation")
 def extract_trace_and_tags(question):
     prompt = langfuse.get_prompt(
         name="generate_traceName_and_tags", type="chat", label="testing", cache_ttl_seconds=300)
@@ -152,7 +150,7 @@ if __name__ == "__main__":
 
             if question.lower() in {"quit", "exit"}:
                 break
-
+            
             answer = process_question(question, session_id, user_id, conversation_history)
 
             # Update conversation history
